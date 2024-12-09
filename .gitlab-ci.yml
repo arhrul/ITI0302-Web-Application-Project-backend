@@ -1,5 +1,6 @@
 stages:
   - build
+  - test
   - dockerize
   - deploy
 
@@ -17,6 +18,23 @@ build:
   artifacts:
     paths:
       - build/libs/*.jar
+
+test:
+  stage: test
+  image: gradle:jdk21
+  dependencies:
+    - build
+  script:
+    - chmod +x ./gradlew
+    - ./gradlew test
+
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - build/test-results/test/*.xml
+    paths:
+      - build/reports/tests/test/
 
 dockerize:
   stage: dockerize
