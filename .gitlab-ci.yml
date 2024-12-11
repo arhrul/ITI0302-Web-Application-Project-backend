@@ -36,6 +36,16 @@ test:
     paths:
       - build/reports/tests/test/
 
+test_e2e:
+  stage: test
+  script: gradle test --tests "api_testing.e2e.*"
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    policy: pull
+    paths:
+      - build
+      - .gradle
+
 dockerize:
   stage: dockerize
   image: docker:latest
