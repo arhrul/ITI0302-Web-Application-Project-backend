@@ -62,7 +62,7 @@ public class ClientDetailsService implements UserDetailsService {
         return getGrantedAuthorities(getPrivileges(roles));
     }
 
-    private List<String> getPrivileges(Collection<Role> roles) {
+    public List<String> getPrivileges(Collection<Role> roles) {
 
         List<String> privileges = new ArrayList<>();
         List<Privilege> collection = new ArrayList<>();
@@ -76,7 +76,7 @@ public class ClientDetailsService implements UserDetailsService {
         return privileges;
     }
 
-    private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
+    public List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (String privilege : privileges) {
             authorities.add(new SimpleGrantedAuthority(privilege));
