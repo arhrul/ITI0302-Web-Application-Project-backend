@@ -66,7 +66,7 @@ public class ReservationService {
         return reservationMapper.toReservationDTOList(reservations);
     }
 
-    private void validateReservationDates(LocalDate checkInDate, LocalDate checkOutDate) {
+    public void validateReservationDates(LocalDate checkInDate, LocalDate checkOutDate) {
         if (checkInDate == null || checkOutDate == null) {
             log.error("Check-in date or check-out date is null.");
             throw new IllegalArgumentException("Check-in date and check-out date must not be null.");
@@ -138,7 +138,6 @@ public class ReservationService {
         Room room = getRoomById(reservationMapper.toReservationDto(reservation).getRoomId());
         room.setAvailable(true);
         reservationRepository.delete(reservation);
-        reservationRepository.delete(reservation);
     }
 
     public List<LocalDate> getUnavailableDatesForRoom(Long roomId) {
@@ -174,7 +173,7 @@ public class ReservationService {
      * @param room the room to validate against
      * @param numberOfGuests the number of guests to validate
      */
-    private void validateNumberOfGuests(Room room, Long numberOfGuests) {
+    public void validateNumberOfGuests(Room room, Long numberOfGuests) {
         if (numberOfGuests < 1) {
             log.error("Invalid number of guests: {}", numberOfGuests);
             throw new InvalidNumberOfGuestsException("There must be at least 1 guest.");
@@ -187,17 +186,17 @@ public class ReservationService {
             throw new InvalidNumberOfGuestsException("For a SINGLE room, only 1 guest is allowed.");
         }
 
-        if (roomType == RoomType.DOUBLE && (numberOfGuests < 1 || numberOfGuests > 2)) {
+        if (roomType == RoomType.DOUBLE && numberOfGuests > 2) {
             log.error("Invalid number of guests for DOUBLE room: {}", numberOfGuests);
             throw new InvalidNumberOfGuestsException("For a DOUBLE room, the number of guests must be between 1 and 2.");
         }
 
-        if (roomType == RoomType.TWIN && (numberOfGuests < 1 || numberOfGuests > 2)) {
+        if (roomType == RoomType.TWIN && numberOfGuests > 2) {
             log.error("Invalid number of guests for TWIN room: {}", numberOfGuests);
             throw new InvalidNumberOfGuestsException("For a TWIN room, the number of guests must be between 1 and 2.");
         }
 
-        if (roomType == RoomType.DELUXE && (numberOfGuests < 1 || numberOfGuests > 5)) {
+        if (roomType == RoomType.DELUXE && numberOfGuests > 5) {
             log.error("Invalid number of guests for DELUXE room: {}", numberOfGuests);
             throw new InvalidNumberOfGuestsException("For a DELUXE room, the number of guests must be between 1 and 5.");
         }

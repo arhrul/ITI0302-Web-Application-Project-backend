@@ -74,11 +74,15 @@ public class AmenityService {
     private void updateRoomPricesForAmenity(Amenity updatedAmenity, double oldAdditionalCost) {
         log.info("Updating room prices based on the updated amenity price.");
 
-        for (Room room : updatedAmenity.getRooms()) {
-            double newPrice = room.getPrice() - oldAdditionalCost + updatedAmenity.getAdditionalCost();
-            room.setPrice(newPrice);
-            roomRepository.save(room);
-            log.info("Room with ID: {} price updated to: {}", room.getId(), newPrice);
+        if (updatedAmenity.getRooms() != null) {
+            for (Room room : updatedAmenity.getRooms()) {
+                double newPrice = room.getPrice() - oldAdditionalCost + updatedAmenity.getAdditionalCost();
+                room.setPrice(newPrice);
+                roomRepository.save(room);
+                log.info("Room with ID: {} price updated to: {}", room.getId(), newPrice);
+            }
+        } else {
+            log.warn("No rooms associated with the amenity to update.");
         }
     }
 
@@ -86,10 +90,14 @@ public class AmenityService {
         log.info("Attempting to delete amenity with ID: {}", id);
         Amenity amenity = getAmenityById(id);
 
-        log.info("Removing amenity with ID: {} from all associated rooms.", id);
-        for (Room room : amenity.getRooms()) {
-            log.info("Removing amenity from room with ID: {}", room.getId());
-            roomAmenityService.removeAmenityFromRoom(room.getId(), id);
+        if (amenity.getRooms() != null) {
+            log.info("Removing amenity with ID: {} from all associated rooms.", id);
+            for (Room room : amenity.getRooms()) {
+                log.info("Removing amenity from room with ID: {}", room.getId());
+                roomAmenityService.removeAmenityFromRoom(room.getId(), id);
+            }
+        } else {
+            log.warn("No rooms associated with the amenity to remove.");
         }
 
         amenityRepository.delete(amenity);

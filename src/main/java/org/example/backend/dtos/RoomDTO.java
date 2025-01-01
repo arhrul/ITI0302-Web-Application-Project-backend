@@ -2,12 +2,16 @@ package org.example.backend.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.backend.enums.RoomType;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoomDTO {
 
     @Schema(description = "The unique identifier of the room", example = "1")

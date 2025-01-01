@@ -104,7 +104,12 @@ public class RoomService {
         }
 
         log.info("Clearing all amenities associated with room with ID: {}", id);
-        room.getAmenities().clear();
+        if (room.getAmenities() != null) {
+            room.getAmenities().clear();
+        } else {
+            log.warn("Room with ID: {} has no amenities to clear.", id);
+        }
+
         roomRepository.save(room);
 
         roomRepository.delete(room);
@@ -132,6 +137,7 @@ public class RoomService {
             roomDTO.setPrice(price);
 
             RoomDTO createdRoom = createRoom(roomDTO);
+            log.info(createdRoom.toString());
             createdRooms.add(createdRoom);
         }
 

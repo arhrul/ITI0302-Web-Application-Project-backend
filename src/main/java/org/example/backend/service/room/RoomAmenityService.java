@@ -64,14 +64,17 @@ public class RoomAmenityService {
         Amenity amenity = amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new NoSuchAmenityException("Amenity not found!"));
 
-        if (room.getAmenities().remove(amenity)) {
-            double newPrice = room.getPrice() - amenity.getAdditionalCost();
-            room.setPrice(newPrice);
-            roomRepository.save(room);
-            log.info("Amenity removed successfully. Room price updated to {}", newPrice);
-        } else {
+        if (!room.getAmenities().contains(amenity)) {
             log.warn("Amenity with ID: {} is not assigned to room with ID: {}", amenityId, roomId);
+            throw new NoSuchAmenityException("Amenity is not assigned to this room.");
         }
+
+        room.getAmenities().remove(amenity);
+        double newPrice = room.getPrice() - amenity.getAdditionalCost();
+        room.setPrice(newPrice);
+        roomRepository.save(room);
+        log.info("Amenity removed successfully. Room price updated to {}", newPrice);
+
     }
 }
 
