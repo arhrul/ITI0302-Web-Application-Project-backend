@@ -6,6 +6,7 @@ import org.example.backend.exception.exceptions.NoSuchClientException;
 import org.example.backend.mappers.ClientMapper;
 import org.example.backend.model.Client;
 import org.example.backend.repository.client.ClientRepository;
+import org.example.backend.repository.reservation.ReservationRepository;  // Import ReservationRepository
 import org.example.backend.service.client.ClientService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,9 @@ class ClientServiceTest {
 
     @Mock
     private ClientMapper clientMapper;
+
+    @Mock
+    private ReservationRepository reservationRepository;
 
     @InjectMocks
     private ClientService clientService;
