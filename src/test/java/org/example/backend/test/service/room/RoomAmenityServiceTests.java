@@ -1,6 +1,6 @@
 package org.example.backend.test.service.room;
 
-import org.example.backend.BaseTests;
+import org.example.backend.BaseTestsSetup;
 
 import org.example.backend.dtos.AmenityDTO;
 import org.example.backend.exception.exceptions.AmenityAlreadyAssignedException;
@@ -21,7 +21,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
-public class RoomAmenityServiceTests extends BaseTests {
+public class RoomAmenityServiceTests extends BaseTestsSetup {
 
     @Test
     void shouldAssignAmenityToRoomSuccessfully() {
@@ -64,6 +64,22 @@ public class RoomAmenityServiceTests extends BaseTests {
         List<AmenityDTO> result = roomAmenityService.getAmenitiesByRoom(1L);
 
         assertThat(result).hasSize(2);
+    }
+
+    @Test
+    void shouldGetAmenitiesContainsCorrectAmenities() {
+        List<Amenity> amenities = new ArrayList<>();
+        amenities.add(amenityFreeWifi);
+        amenities.add(amenityBreakfast);
+        room.setAmenities(amenities);
+
+        given(roomRepository.findById(1L)).willReturn(Optional.of(room));
+
+        List<AmenityDTO> amenityDTOList = List.of(amenityDTOFreeWifi, amenityDTOBreakfast);
+        given(amenityMapper.toAmenityDTOList(amenities)).willReturn(amenityDTOList);
+
+        List<AmenityDTO> result = roomAmenityService.getAmenitiesByRoom(1L);
+
         assertThat(result).containsExactly(amenityDTOFreeWifi, amenityDTOBreakfast);
     }
 

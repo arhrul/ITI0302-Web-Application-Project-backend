@@ -1,6 +1,6 @@
 package org.example.backend.test.service.room;
 
-import org.example.backend.BaseTests;
+import org.example.backend.BaseTestsSetup;
 import org.example.backend.dtos.AmenityDTO;
 import org.example.backend.exception.exceptions.AmenityNameAlreadyExistsException;
 import org.example.backend.exception.exceptions.NoSuchAmenityException;
@@ -20,7 +20,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class AmenityServiceTests extends BaseTests {
+class AmenityServiceTests extends BaseTestsSetup {
 
     @Test
     void createAmenitySuccessfully() {

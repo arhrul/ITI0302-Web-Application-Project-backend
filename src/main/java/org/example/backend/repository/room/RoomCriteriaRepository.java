@@ -19,6 +19,8 @@ import java.util.List;
 public class RoomCriteriaRepository {
     private final EntityManager entityManager;
 
+    public static final String PRICE = "price";
+
     public List<Room> getAllRooms(RoomSearchCriteria criteria, Pageable pageable) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Room> query = cb.createQuery(Room.class);
@@ -30,10 +32,10 @@ public class RoomCriteriaRepository {
             predicates.add(cb.equal(root.get("type"), criteria.getType()));
         }
         if (criteria.getMinPrice() != null) {
-            predicates.add(cb.greaterThanOrEqualTo(root.get("price"), criteria.getMinPrice()));
+            predicates.add(cb.greaterThanOrEqualTo(root.get(PRICE), criteria.getMinPrice()));
         }
         if (criteria.getMaxPrice() != null) {
-            predicates.add(cb.lessThanOrEqualTo(root.get("price"), criteria.getMaxPrice()));
+            predicates.add(cb.lessThanOrEqualTo(root.get(PRICE), criteria.getMaxPrice()));
         }
         if (criteria.getCheckInDate() != null && criteria.getCheckOutDate() != null) {
             Subquery<Long> subquery = query.subquery(Long.class);
@@ -59,12 +61,10 @@ public class RoomCriteriaRepository {
                 .orElse(Sort.Direction.ASC);
 
         if (sortDir == Sort.Direction.ASC) {
-            query.orderBy(cb.asc(root.get("price")));
+            query.orderBy(cb.asc(root.get(PRICE)));
         } else {
-            query.orderBy(cb.desc(root.get("price")));
+            query.orderBy(cb.desc(root.get(PRICE)));
         }
-
-        int page = criteria.getPage().orElseGet(() -> 0);
 
         TypedQuery<Room> typedQuery = entityManager.createQuery(query);
         typedQuery.setFirstResult((int) pageable.getOffset());

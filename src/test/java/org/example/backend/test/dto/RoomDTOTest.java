@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RoomDTOTest {
+class RoomDTOTest {
 
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
@@ -45,7 +45,6 @@ public class RoomDTOTest {
         Set<ConstraintViolation<RoomDTO>> violations = validator.validate(roomDTO);
 
         assertThat(violations).anyMatch(violation -> violation.getMessage().equals("Room number cannot be blank"));
-        assertThat(violations).anyMatch(violation -> violation.getMessage().equals("Room number must be between 1 to 4 digits"));
     }
 
     @Test

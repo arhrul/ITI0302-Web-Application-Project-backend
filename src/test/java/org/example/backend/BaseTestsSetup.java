@@ -28,7 +28,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDate;
 
-public class BaseTests {
+public class BaseTestsSetup {
 
     @Mock
     public ClientRepository clientRepository;

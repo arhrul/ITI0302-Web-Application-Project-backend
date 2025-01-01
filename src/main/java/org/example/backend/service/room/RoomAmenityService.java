@@ -23,12 +23,13 @@ public class RoomAmenityService {
     private final RoomRepository roomRepository;
     private final AmenityRepository amenityRepository;
     private final AmenityMapper amenityMapper;
+    public static final String ROOM_NOT_FOUND_MESSAGE = "Room not found!";
 
     public void assignAmenityToRoom(Long roomId, Long amenityId) {
         log.info("Attempting to assign amenity with ID: {} to room with ID: {}", amenityId, roomId);
 
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NoSuchRoomException("Room not found!"));
+                .orElseThrow(() -> new NoSuchRoomException(ROOM_NOT_FOUND_MESSAGE));
 
         Amenity amenity = amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new NoSuchAmenityException("Amenity not found!"));
@@ -49,7 +50,7 @@ public class RoomAmenityService {
         log.info("Fetching amenities for room with ID: {}", roomId);
 
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NoSuchRoomException("Room not found!"));
+                .orElseThrow(() -> new NoSuchRoomException(ROOM_NOT_FOUND_MESSAGE));
 
         List<Amenity> amenities = room.getAmenities();
         log.info("Found {} amenities for room with ID: {}", amenities.size(), roomId);
@@ -59,7 +60,7 @@ public class RoomAmenityService {
     public void removeAmenityFromRoom(Long roomId, Long amenityId) {
         log.info("Attempting to remove amenity with ID: {} from room with ID: {}", amenityId, roomId);
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new NoSuchRoomException("Room not found!"));
+                .orElseThrow(() -> new NoSuchRoomException(ROOM_NOT_FOUND_MESSAGE));
 
         Amenity amenity = amenityRepository.findById(amenityId)
                 .orElseThrow(() -> new NoSuchAmenityException("Amenity not found!"));

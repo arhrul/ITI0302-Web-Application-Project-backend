@@ -1,6 +1,6 @@
 package org.example.backend.test.service.room;
 
-import org.example.backend.BaseTests;
+import org.example.backend.BaseTestsSetup;
 import org.example.backend.criteria.RoomSearchCriteria;
 import org.example.backend.dtos.RoomDTO;
 import org.example.backend.enums.RoomType;
@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RoomServiceTest extends BaseTests {
+public class RoomServiceTest extends BaseTestsSetup {
 
     @Test
     void shouldCreateRoomSuccessfully() {

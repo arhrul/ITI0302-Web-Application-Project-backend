@@ -1,6 +1,6 @@
 package org.example.backend.test.service.reservation;
 
-import org.example.backend.BaseTests;
+import org.example.backend.BaseTestsSetup;
 import org.example.backend.dtos.ReservationDTO;
 import org.example.backend.enums.RoomType;
 import org.example.backend.exception.exceptions.InvalidNumberOfGuestsException;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationServiceTests extends BaseTests {
+public class ReservationServiceTests extends BaseTestsSetup {
 
     @Test
     void shouldCreateReservationSuccessfully() {
@@ -59,11 +59,12 @@ public class ReservationServiceTests extends BaseTests {
         LocalDate checkInDate = LocalDate.of(2025, 1, 10);
         LocalDate checkOutDate = LocalDate.of(2025, 1, 15);
 
-        when(reservationRepository.findByRoomId(room)).thenReturn(Arrays.asList(existingReservation));
+        when(reservationRepository.findByRoomId(room)).thenReturn(List.of(existingReservation));
+        Long roomId = room.getId();
 
-        RoomAlreadyBookedException exception = assertThrows(RoomAlreadyBookedException.class, () ->
-                reservationService.validateRoomAvailability(room.getId(), checkInDate, checkOutDate));
-
+        RoomAlreadyBookedException exception = assertThrows(RoomAlreadyBookedException.class, () -> {
+            reservationService.validateRoomAvailability(roomId, checkInDate, checkOutDate);
+        });
         assertEquals("The room is already booked for the selected dates.", exception.getMessage());
     }
 
@@ -184,16 +185,21 @@ public class ReservationServiceTests extends BaseTests {
 
     @Test
     void shouldThrowExceptionWhenCheckInDateIsNotBeforeCheckOutDate() {
+        LocalDate checkInDate = LocalDate.of(2025, 1, 3);
+        LocalDate checkOutDate = LocalDate.of(2025, 1, 1);
+
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                reservationService.validateReservationDates(LocalDate.of(2025, 1, 3), LocalDate.of(2025, 1, 1))
+                reservationService.validateReservationDates(checkInDate, checkOutDate)
         );
         assertEquals("Check-in date must be before the check-out date.", exception.getMessage());
     }
 
     @Test
     void shouldThrowExceptionWhenCheckInOrCheckOutDateIsNull() {
+        LocalDate date = LocalDate.of(2025, 1, 3);
+
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
-                reservationService.validateReservationDates(null, LocalDate.of(2025, 1, 1))
+                reservationService.validateReservationDates(null, date)
         );
         assertEquals("Check-in date and check-out date must not be null.", exception.getMessage());
     }
@@ -202,24 +208,6 @@ public class ReservationServiceTests extends BaseTests {
     void shouldNotThrowExceptionWhenDatesAreValid() {
         assertDoesNotThrow(() -> reservationService.validateReservationDates(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 3)));
     }
-
-//    @Test
-//    void shouldReturnUnavailableDatesForRoom() {
-//        Reservation reservation = new Reservation();
-//        reservation.setCheckInDate(LocalDate.of(2026, 12, 1));
-//        reservation.setCheckOutDate(LocalDate.of(2026, 12, 7));
-//        reservation.setRoomId(room);
-//
-//        given(roomRepository.findById(1L)).willReturn(Optional.of(room));
-//        given(reservationRepository.findByRoomId(room)).willReturn(List.of(reservation));
-//
-//        List<LocalDate> unavailableDates = reservationService.getUnavailableDatesForRoom(1L);
-//
-//        assertEquals(6, unavailableDates.size());
-//        assertTrue(unavailableDates.contains(LocalDate.of(2026, 12, 1)));
-//        assertTrue(unavailableDates.contains(LocalDate.of(2026, 12, 3)));
-//        assertTrue(unavailableDates.contains(LocalDate.of(2026, 12, 6)));
-//    }
 
     @Test
     void shouldThrowExceptionForInvalidNumberOfGuests() {
