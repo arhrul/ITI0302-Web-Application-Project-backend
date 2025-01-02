@@ -9,7 +9,6 @@ import org.example.backend.exception.exceptions.RoomDeletionException;
 import org.example.backend.mappers.ClientMapper;
 import org.example.backend.model.Client;
 import org.example.backend.model.Reservation;
-import org.example.backend.model.Room;
 import org.example.backend.repository.client.ClientRepository;
 import org.example.backend.repository.reservation.ReservationRepository;
 import org.springframework.stereotype.Service;

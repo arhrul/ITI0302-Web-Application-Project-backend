@@ -49,22 +49,6 @@ public class AmenityController {
         return ResponseEntity.ok(amenities);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get amenity by ID", description = "Retrieve an amenity by its unique ID")
-    @ApiResponse(responseCode = "200", description = "Amenity found")
-    @ApiResponse(responseCode = "404", description = "Amenity not found")
-    public ResponseEntity<AmenityDTO> getAmenity(
-            @PathVariable @Parameter(description = "Amenity ID") Long id) {
-        log.info("Fetching amenity with ID: {}", id);
-        AmenityDTO amenity = amenityService.getAmenity(id);
-        if (amenity != null) {
-            log.info("Amenity found: {}", amenity);
-        } else {
-            log.warn("Amenity with ID {} not found", id);
-        }
-        return ResponseEntity.ok(amenity);
-    }
-
     @PutMapping("/private/{id}")
     @Operation(
             summary = "Update amenity details",

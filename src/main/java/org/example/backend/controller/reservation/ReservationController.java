@@ -56,21 +56,6 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get reservation by ID", description = "Retrieve a reservation by its unique ID")
-    @ApiResponse(responseCode = "200", description = "Reservation found")
-    @ApiResponse(responseCode = "404", description = "Reservation not found")
-    public ResponseEntity<ReservationDTO> getReservation(
-            @PathVariable @Parameter(description = "Reservation ID") Long id) {
-        log.info("Fetching reservation with ID: {}", id);
-        ReservationDTO reservation = reservationService.getReservation(id);
-        if (reservation != null) {
-            log.info("Reservation found: {}", reservation);
-        } else {
-            log.warn("Reservation with ID {} not found", id);
-        }
-        return ResponseEntity.ok(reservation);    }
-
     @PutMapping("/{id}")
     @Operation(summary = "Update reservation details", description = "Update the details of a specific reservation")
     @ApiResponse(responseCode = "200", description = "Reservation updated successfully")

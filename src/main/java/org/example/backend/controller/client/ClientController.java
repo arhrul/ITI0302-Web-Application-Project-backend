@@ -23,17 +23,6 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    @PostMapping
-    @Operation(summary = "Create a new client", description = "Create a new client and return the client details")
-    @ApiResponse(responseCode = "200", description = "Client created successfully")
-    @ApiResponse(responseCode = "400", description = "Invalid client data")
-    public ResponseEntity<ClientDTO> createClient(@RequestBody @Valid ClientDTO clientDTO) {
-        log.info("Received request to create client: {}", clientDTO);
-        ClientDTO createdClient = clientService.createClient(clientDTO);
-        log.info("Client created successfully: {}", createdClient);
-        return ResponseEntity.ok(createdClient);
-    }
-
     @GetMapping
     @Operation(summary = "Get list of clients", description = "Retrieve a list of all clients")
     @ApiResponse(responseCode = "200", description = "List of clients")

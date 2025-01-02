@@ -24,6 +24,7 @@ public class RoomAmenityService {
     private final AmenityRepository amenityRepository;
     private final AmenityMapper amenityMapper;
     public static final String ROOM_NOT_FOUND_MESSAGE = "Room not found!";
+    private static final String AMENITY_NOT_FOUND = "Amenity not found!";
 
     public void assignAmenityToRoom(Long roomId, Long amenityId) {
         log.info("Attempting to assign amenity with ID: {} to room with ID: {}", amenityId, roomId);
@@ -32,7 +33,7 @@ public class RoomAmenityService {
                 .orElseThrow(() -> new NoSuchRoomException(ROOM_NOT_FOUND_MESSAGE));
 
         Amenity amenity = amenityRepository.findById(amenityId)
-                .orElseThrow(() -> new NoSuchAmenityException("Amenity not found!"));
+                .orElseThrow(() -> new NoSuchAmenityException(AMENITY_NOT_FOUND));
 
         if (room.getAmenities().contains(amenity)) {
             log.warn("Amenity with ID: {} is already assigned to room with ID: {}", amenityId, roomId);
@@ -63,7 +64,7 @@ public class RoomAmenityService {
                 .orElseThrow(() -> new NoSuchRoomException(ROOM_NOT_FOUND_MESSAGE));
 
         Amenity amenity = amenityRepository.findById(amenityId)
-                .orElseThrow(() -> new NoSuchAmenityException("Amenity not found!"));
+                .orElseThrow(() -> new NoSuchAmenityException(AMENITY_NOT_FOUND));
 
         if (!room.getAmenities().contains(amenity)) {
             log.warn("Amenity with ID: {} is not assigned to room with ID: {}", amenityId, roomId);

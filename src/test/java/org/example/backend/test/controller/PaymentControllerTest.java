@@ -1,8 +1,8 @@
 package org.example.backend.test.controller;
 
-import org.example.backend.controller.PaymentController;
+import org.example.backend.controller.payment.PaymentController;
 import org.example.backend.dtos.PaymentDTO;
-import org.example.backend.service.PaymentService;
+import org.example.backend.service.payment.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

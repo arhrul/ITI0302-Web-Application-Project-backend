@@ -1,4 +1,4 @@
-package org.example.backend.service;
+package org.example.backend.service.payment;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +40,6 @@ public class PaymentService {
         return paymentMapper.toPaymentDTO(savedPayment);
     }
 
-    public PaymentDTO getPaymentById(Long id) {
-        log.info("Fetching payment with ID: {}", id);
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new NoSuchPaymentException(ERROR_MESSAGE));
-        return paymentMapper.toPaymentDTO(payment);
-    }
-
     public List<PaymentDTO> getAllPayments() {
         log.info("Fetching all payments.");
         List<Payment> payments = paymentRepository.findAll();
@@ -76,6 +69,13 @@ public class PaymentService {
         log.info("Payment with ID: {} updated successfully.", savedPayment.getId());
 
         return paymentMapper.toPaymentDTO(savedPayment);
+    }
+
+    public PaymentDTO getPaymentById(Long id) {
+        log.info("Fetching payment with ID: {}", id);
+        Payment payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new NoSuchPaymentException(ERROR_MESSAGE));
+        return paymentMapper.toPaymentDTO(payment);
     }
 
     public void deletePayment(Long id) {

@@ -1,4 +1,4 @@
-package org.example.backend.controller;
+package org.example.backend.controller.payment;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -7,7 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dtos.PaymentDTO;
-import org.example.backend.service.PaymentService;
+import org.example.backend.service.payment.PaymentService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,13 +51,13 @@ public class PaymentController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get payment by ID", description = "Retrieves payment details by ID.")
-    @ApiResponse(responseCode = "200", description = "Payment found")
+    @Operation(summary = "Retrieve payment by ID", description = "Fetches a single payment record by its ID.")
+    @ApiResponse(responseCode = "200", description = "Payment retrieved successfully")
     @ApiResponse(responseCode = "404", description = "Payment not found")
-    public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable long id) {
+    public ResponseEntity<PaymentDTO> getPaymentById(@PathVariable Long id) {
         log.info("Received request to retrieve payment with ID: {}", id);
         PaymentDTO payment = paymentService.getPaymentById(id);
-        log.info("Payment found: {}", payment);
+        log.info("Successfully retrieved payment: {}", payment);
         return ResponseEntity.ok(payment);
     }
 

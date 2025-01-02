@@ -9,7 +9,7 @@ import org.example.backend.model.Reservation;
 import org.example.backend.repository.client.ClientRepository;
 import org.example.backend.repository.reservation.ReservationRepository;
 import org.example.backend.repository.PaymentRepository;
-import org.example.backend.service.PaymentService;
+import org.example.backend.service.payment.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
