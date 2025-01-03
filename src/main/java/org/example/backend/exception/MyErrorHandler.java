@@ -116,4 +116,9 @@ public class MyErrorHandler {
     public ResponseEntity<String> handleAmenityAlreadyAssigned(AmenityAlreadyAssignedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+
+    @ExceptionHandler(InvalidNewPasswordException.class)
+    public ResponseEntity<String> handleInvalidNewPasswordException(InvalidNewPasswordException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }

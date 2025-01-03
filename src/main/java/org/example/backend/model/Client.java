@@ -26,6 +26,9 @@ public class Client {
     @Column(nullable = false)
     private String password;
 
+    @Column()
+    private String oldPassword;
+
     @ManyToMany
     @JoinTable(
             name = "users_roles",

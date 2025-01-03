@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dtos.ClientDTO;
 import org.example.backend.exception.exceptions.ClientEmailAlreadyExistsException;
+import org.example.backend.exception.exceptions.InvalidNewPasswordException;
 import org.example.backend.exception.exceptions.NoSuchClientException;
 import org.example.backend.exception.exceptions.RoomDeletionException;
 import org.example.backend.mappers.ClientMapper;
@@ -11,9 +12,11 @@ import org.example.backend.model.Client;
 import org.example.backend.model.Reservation;
 import org.example.backend.repository.client.ClientRepository;
 import org.example.backend.repository.reservation.ReservationRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -23,6 +26,7 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
     private final ReservationRepository reservationRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public ClientDTO createClient(ClientDTO clientDTO) {
         log.info("Creating a new client with email: {}", clientDTO.getEmail());
@@ -81,6 +85,22 @@ public class ClientService {
         client.setPhone(clientDTO.getPhone());
         Client updatedClient = clientRepository.save(client);
         log.info("Client with id: {} updated successfully", id);
+        return clientMapper.toClientDto(updatedClient);
+    }
+
+    public ClientDTO updatePassword(Long id, String password) {
+        Client client = getClientById(id);
+        String currentPassword = client.getPassword();
+        String oldPassword = client.getOldPassword();
+        if (!passwordEncoder.matches(password, currentPassword) && !passwordEncoder.matches(password, oldPassword)) {
+            String hashedPassword = passwordEncoder.encode(password);
+            client.setOldPassword(currentPassword);
+            client.setPassword(hashedPassword);
+        } else {
+            throw new InvalidNewPasswordException("New password cannot the same with two previous passwords!");
+        }
+
+        Client updatedClient = clientRepository.save(client);
         return clientMapper.toClientDto(updatedClient);
     }
 

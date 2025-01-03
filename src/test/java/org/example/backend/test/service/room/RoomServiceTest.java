@@ -29,7 +29,7 @@ import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class RoomServiceTest extends BaseTestsSetup {
+class RoomServiceTest extends BaseTestsSetup {
 
     @Test
     void shouldCreateRoomSuccessfully() {

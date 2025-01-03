@@ -70,4 +70,13 @@ public class ClientController {
         log.info("Client with ID {} deleted successfully", id);
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/password/{id}")
+    public ResponseEntity<ClientDTO> updateClientPassword(
+            @PathVariable Long id,
+            @RequestBody String password
+    ) {
+        ClientDTO updatedClient = clientService.updatePassword(id, password);
+        return ResponseEntity.ok(updatedClient);
+    }
 }
