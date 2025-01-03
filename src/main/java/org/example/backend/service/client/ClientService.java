@@ -3,7 +3,9 @@ package org.example.backend.service.client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dtos.ClientDTO;
+import org.example.backend.dtos.auth.NewPasswordRequestDTO;
 import org.example.backend.exception.exceptions.ClientEmailAlreadyExistsException;
+import org.example.backend.exception.exceptions.NewPasswordMustBeDifferentException;
 import org.example.backend.exception.exceptions.NoSuchClientException;
 import org.example.backend.exception.exceptions.RoomDeletionException;
 import org.example.backend.mappers.ClientMapper;
@@ -11,8 +13,10 @@ import org.example.backend.model.Client;
 import org.example.backend.model.Reservation;
 import org.example.backend.repository.client.ClientRepository;
 import org.example.backend.repository.reservation.ReservationRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -23,6 +27,8 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
     private final ReservationRepository reservationRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     public ClientDTO createClient(ClientDTO clientDTO) {
         log.info("Creating a new client with email: {}", clientDTO.getEmail());
@@ -82,6 +88,51 @@ public class ClientService {
         Client updatedClient = clientRepository.save(client);
         log.info("Client with id: {} updated successfully", id);
         return clientMapper.toClientDto(updatedClient);
+    }
+
+    public NewPasswordRequestDTO updateClientPassword(String clientEmail, NewPasswordRequestDTO newPasswordRequestDTO) {
+        //validate client old passes
+        Client client = clientRepository.findByEmail(clientEmail);
+
+        log.info("Validating new password for client with email: {}", clientEmail);
+        validateClientOldPasswords(clientEmail, newPasswordRequestDTO);
+
+        // get new hashed pass
+        String newPassword = newPasswordRequestDTO.getNewPassword();
+        String hashedPassword = passwordEncoder.encode(newPassword);
+
+        //set new pass and save client
+        client.setPassword(hashedPassword);
+        clientRepository.save(client);
+
+        log.info("Client password with id: {} updated successfully", clientEmail);
+        return newPasswordRequestDTO;
+    }
+
+    private void validateClientOldPasswords(String clientEmail, NewPasswordRequestDTO newPasswordRequestDTO) {
+        String newPassword = newPasswordRequestDTO.getNewPassword();
+
+        // client pass must be included to the new pass
+        Client client = clientRepository.findByEmail(clientEmail);
+        String clientPassword = client.getPassword();
+
+        if (clientPassword.equals(newPassword)) {
+            throw new NewPasswordMustBeDifferentException("New password is the as the previous ones.");
+        }
+        if (client.getOldPassword2() != null) {
+            String clientOldPassword2 = client.getOldPassword2();
+            if (clientOldPassword2.equals(newPassword)) {
+                throw new NewPasswordMustBeDifferentException("New password is the as the previous ones.");
+            }
+            client.setPassword(newPassword);
+            client.setOldPassword1(clientOldPassword2);
+            client.setOldPassword2(newPassword);
+        }
+        if (client.getOldPassword2() == null) {
+            String clientOldPassword1 = client.getPassword();
+            client.setOldPassword1(clientOldPassword1);
+            client.setOldPassword2(newPasswordRequestDTO.getNewPassword());
+        }
     }
 
     public void deleteClient(Long id) {

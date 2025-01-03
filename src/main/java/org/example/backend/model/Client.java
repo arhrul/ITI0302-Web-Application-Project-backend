@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Data
@@ -25,6 +26,12 @@ public class Client {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(name = "old_password_1")
+    private String oldPassword1;
+
+    @Column(name = "old_password_2")
+    private String oldPassword2;
 
     @ManyToMany
     @JoinTable(

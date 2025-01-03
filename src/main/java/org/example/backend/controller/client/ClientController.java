@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.backend.dtos.ClientDTO;
+import org.example.backend.dtos.auth.NewPasswordRequestDTO;
 import org.example.backend.service.client.ClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,18 @@ public class ClientController {
         log.info("Updating client with ID: {}. New data: {}", id, updatedClientDTO);
         ClientDTO updatedClient = clientService.updateClient(id, updatedClientDTO);
         log.info("Client updated successfully: {}", updatedClient);
-        return ResponseEntity.ok(updatedClient);    }
+        return ResponseEntity.ok(updatedClient);
+    }
+
+    @PutMapping("/password/{id}")
+    public ResponseEntity<NewPasswordRequestDTO> updateClientPassword(
+            @PathVariable String clientEmail,
+            @RequestBody @Valid NewPasswordRequestDTO newPasswordRequestDTO) {
+        log.info("Updating client password with ID: {}", clientEmail);
+
+        NewPasswordRequestDTO updatedClient = clientService.updateClientPassword(clientEmail, newPasswordRequestDTO);
+        return ResponseEntity.ok(updatedClient);
+    }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete a client", description = "Delete a client by their unique ID")
